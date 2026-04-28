@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://imbue.com/blueprint">
+  <a href="https://imbue.com/product/blueprint">
     <img src="assets/readme-header.png" alt="Blueprint" />
   </a>
 </p>
