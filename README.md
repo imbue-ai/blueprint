@@ -113,7 +113,7 @@ Example:
 
 ## Also available
 
-Prefer a sidebar? Blueprint ships as a [VS Code extension](https://marketplace.visualstudio.com/items?itemName=Imbue.imbue-blueprint) that works in VS Code, Cursor, and Windsurf.
+Prefer a sidebar? Blueprint ships as a [VS Code extension](https://marketplace.visualstudio.com/items?itemName=Imbue.imbue-blueprint) that works in VS Code, Cursor, and Windsurf. The extension is open source at [imbue-ai/blueprint-vscode](https://github.com/imbue-ai/blueprint-vscode).
 
 ## Community
 
