@@ -12,8 +12,15 @@ Agent-agnostic skills compatible with [skills.sh](https://skills.sh). Works with
 
 ## Why Blueprint
 
-Most coding agents rush to code or guess at the plan. Blueprint slows down just enough to ask the right questions. It reads your codebase and asks multiple-choice questions you can answer easily. It catches things you didn't think to think about. The output is a markdown plan any coding agent can execute.
+Most coding agents rush to code or guess at the plan. Blueprint slows down just enough to ask the right questions. It reads your codebase and asks multiple-choice questions you can answer easily. The output is a markdown plan any coding agent can execute.
 
+**You stay in control without doing the tedious work.** Blueprint splits planning between you and the agent. The initial idea comes from you. Enumerating all the considerations and choices comes from the agent. Decisions come from you. You skip the tedious parts of planning but stay in the driver's seat.
+
+**Questions that make you think.** Blueprint asks questions that surface real design choices — the kind that engage you and make you think about what you actually want. It surfaces things you wouldn't have thought to ask about.
+
+**Easy to answer.** Each round is a small chunk of work. Questions start broad and get more specific as the plan takes shape.
+
+**Scales to however much planning you want.** You repeat this small loop until you decide to stop. If you don't want to plan much, you have a quick out — generate the plan after one round. If you want to plan extensively, the agent helps you keep exploring while keeping track of everything. This keeps you in control in two ways: you make the decisions, and you decide how much to plan.
 > "Catches things that I didn't think to think about."
 >
 > "A way to get ideas out of your mind and into a spec."
