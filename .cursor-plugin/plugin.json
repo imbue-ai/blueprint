@@ -1,0 +1,24 @@
+{
+  "name": "blueprint",
+  "displayName": "Blueprint",
+  "version": "1.0.0",
+  "description": "Planning copilot for coding agents. Asks the right questions before you write code, then generates a plan your agent can execute in one shot.",
+  "author": {
+    "name": "Imbue",
+    "email": "nayana@imbue.com"
+  },
+  "license": "MIT",
+  "keywords": [
+    "blueprint",
+    "plan",
+    "planning",
+    "implementation-plan",
+    "spec",
+    "specification",
+    "design-doc",
+    "requirements",
+    "architecture",
+    "agent"
+  ],
+  "logo": "assets/icon.png"
+}
