@@ -1,56 +1,70 @@
 #!/usr/bin/env bash
+# Install Blueprint skills for Claude Code
+# Supports both local run (./install-skills.sh) and remote (curl | bash).
 set -euo pipefail
 
-SKILLS=("blueprint" "blueprint-generate")
-GITHUB_BASE="https://raw.githubusercontent.com/imbue-ai/blueprint/main/skills"
-
-# Resolve target skills directory
+REPO_URL="https://github.com/imbue-ai/blueprint.git"
 SKILLS_DIR="${CLAUDE_CONFIG_DIR:-$HOME/.claude}/skills"
 
-# Detect whether we are running from within the repo or standalone (curl | bash)
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-}")" 2>/dev/null && pwd)" || SCRIPT_DIR=""
+cleanup() {
+  if [ -n "${TEMP_DIR:-}" ] && [ -d "$TEMP_DIR" ]; then
+    rm -rf "$TEMP_DIR"
+  fi
+}
 
-if [ -n "$SCRIPT_DIR" ] && [ -d "$SCRIPT_DIR/skills" ]; then
+main() {
+  # Determine source directory: local repo or shallow clone
+  SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" 2>/dev/null && pwd)" || SCRIPT_DIR=""
+
+  if [ -n "$SCRIPT_DIR" ] && [ -d "$SCRIPT_DIR/skills" ]; then
     # In-repo mode: create symlinks for live editing
     echo "Detected in-repo run. Installing skills via symlinks..."
     mkdir -p "$SKILLS_DIR"
 
-    for skill in "${SKILLS[@]}"; do
-        src="$SCRIPT_DIR/skills/$skill"
-        dst="$SKILLS_DIR/$skill"
+    for skill_dir in "$SCRIPT_DIR/skills"/*/; do
+      skill_name="$(basename "$skill_dir")"
+      dst="$SKILLS_DIR/$skill_name"
 
-        if [ -L "$dst" ]; then
-            echo "Updating existing symlink for $skill..."
-            rm "$dst"
-        elif [ -e "$dst" ]; then
-            echo "Error: $dst already exists and is not a symlink. Remove it manually."
-            exit 1
-        fi
+      if [ -L "$dst" ]; then
+        echo "  Updating existing symlink for $skill_name..."
+        rm "$dst"
+      elif [ -e "$dst" ]; then
+        echo "  Error: $dst already exists and is not a symlink. Remove it manually."
+        exit 1
+      fi
 
-        ln -s "$src" "$dst"
-        echo "Installed: $dst -> $src"
+      ln -s "$skill_dir" "$dst"
+      echo "  Installed: $skill_name (symlink)"
     done
-else
-    # Standalone mode: download SKILL.md files from GitHub
-    echo "Standalone mode. Downloading skills from GitHub..."
+  else
+    # Standalone mode: shallow clone and copy
+    echo "Downloading Blueprint skills..."
+    TEMP_DIR="$(mktemp -d)"
+    trap cleanup EXIT
+    git clone --depth 1 "$REPO_URL" "$TEMP_DIR" 2>/dev/null
+
+    echo "Installing Blueprint skills..."
     mkdir -p "$SKILLS_DIR"
 
-    for skill in "${SKILLS[@]}"; do
-        dst="$SKILLS_DIR/$skill"
+    for skill_dir in "$TEMP_DIR/skills"/*/; do
+      skill_name="$(basename "$skill_dir")"
+      dst="$SKILLS_DIR/$skill_name"
 
-        if [ -L "$dst" ]; then
-            echo "Removing existing symlink for $skill..."
-            rm "$dst"
-        elif [ -e "$dst" ]; then
-            echo "Error: $dst already exists and is not a symlink. Remove it manually."
-            exit 1
-        fi
-
-        mkdir -p "$dst"
-        echo "Downloading $skill/SKILL.md..."
-        curl -fsSL "$GITHUB_BASE/$skill/SKILL.md" -o "$dst/SKILL.md"
-        echo "Installed: $dst/SKILL.md"
+      if [ -L "$dst" ]; then
+        rm "$dst"
+      fi
+      rm -rf "$dst"
+      cp -r "$skill_dir" "$dst"
+      echo "  Installed: $skill_name"
     done
-fi
+  fi
 
-echo "Done. Skills installed to $SKILLS_DIR"
+  echo ""
+  echo "Installation complete!"
+  echo ""
+  echo "Commands:"
+  echo "  /blueprint <description>      Start a new plan session with Q&A"
+  echo "  /blueprint-generate            Generate the plan from Q&A"
+}
+
+main "$@"
