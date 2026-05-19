@@ -33,6 +33,14 @@ Most coding agents rush to code or guess at the plan. Blueprint slows down just 
 npx skills add imbue-ai/blueprint
 ```
 
+For Claude Code, you can also install directly with curl:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/imbue-ai/blueprint/main/install-skills.sh | bash
+```
+
+This copies the skills into `~/.claude/skills/` (or `$CLAUDE_CONFIG_DIR/skills` if set).
+
 ## Quickstart
 
 In your agent, invoke the skill with a short description of the task.
