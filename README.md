@@ -18,9 +18,9 @@ Most coding agents rush to code or guess at the plan. Blueprint slows down just 
 
 **Questions that make you think.** Blueprint asks questions that surface real design choices — the kind that engage you and make you think about what you actually want. It surfaces things you wouldn't have thought to ask about.
 
-**Easy to answer.** Each round is a small chunk of work. Questions start broad and get more specific as the plan takes shape.
+**Easy to answer.** Questions come one at a time, so there is nothing to keep track of. Questions start broad and get more specific as the plan takes shape.
 
-**Scales to however much planning you want.** You repeat this small loop until you decide to stop. If you don't want to plan much, you have a quick out — generate the plan after one round. If you want to plan extensively, the agent helps you keep exploring while keeping track of everything. This keeps you in control in two ways: you make the decisions, and you decide how much to plan.
+**Scales to however much planning you want.** You repeat this small loop until you decide to stop. After every question you have a quick out — reply `done` and the plan is generated from what you have covered so far. A one-line detail check after each answer tells you which parts of the plan have enough detail and which are still thin, so you know whether stopping now would leave gaps. If you want to plan extensively, the agent helps you keep exploring while keeping track of everything. This keeps you in control in two ways: you make the decisions, and you decide how much to plan.
 > "Catches things that I didn't think to think about."
 >
 > "A way to get ideas out of your mind and into a spec."
@@ -49,7 +49,7 @@ In your agent, invoke the skill with a short description of the task.
 /blueprint Add a caching layer to reduce API calls
 ```
 
-Blueprint asks you to pick a template, explores your codebase, and starts asking questions. Answer what matters. Skip what you don't care about. When you have covered enough ground, generate the plan.
+Blueprint asks you to pick a template, explores your codebase, and starts asking questions — one at a time. Answer what matters, reply `skip` for what you don't care about. When you have covered enough ground, reply `done` (or invoke the generate skill directly) to write the plan.
 
 ```text
 /blueprint-generate
@@ -66,9 +66,9 @@ The plan is written to `blueprint/<slug>/plan-<slug>.md`. From there, chat to re
 
 ## Workflow
 
-1. Run `blueprint <description>`. Pick a template. The agent explores your codebase and asks the first round of questions.
-2. Answer questions. Follow-ups come naturally based on your answers.
-3. Run `blueprint-generate`. The plan lands at `blueprint/<slug>/plan-<slug>.md`.
+1. Run `blueprint <description>`. Pick a template. The agent explores your codebase and asks its first question.
+2. Answer questions one at a time. Follow-ups come naturally based on your answers, and a detail check after each answer shows how complete the plan is.
+3. Reply `done` (or run `blueprint-generate`). The plan lands at `blueprint/<slug>/plan-<slug>.md`.
 4. Refine in chat. Ask *"what are the open questions?"* to surface what is still ambiguous.
 5. Continue refining for as many rounds as you want.
 6. Hand the plan to your coding agent.

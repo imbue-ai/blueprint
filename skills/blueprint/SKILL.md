@@ -34,10 +34,10 @@ Spend real effort here. Read actual source files.
 
 Help the user think through everything they'd need to answer in order to write that plan well.
 
-Based on the codebase exploration, ask 3-5 clarifying questions following the format in [references/questions.md](references/questions.md).
+Based on the codebase exploration, ask ONE clarifying question following the format in [references/questions.md](references/questions.md). Ask exactly one question per message — never batch multiple questions, even if several topics are pending. Keep a mental list of remaining topics and work through them one at a time.
 
 Guidelines:
-- Keep text between questions brief — a sentence or two of context at most, not a full analysis
+- Keep text around the question brief — a sentence or two of context at most, not a full analysis
 - Gather facts before asking — if something can be determined by reading code, searching docs, or looking up external references, find the answer yourself. Do not make subjective decisions on behalf of the user
 - Look up external documentation, APIs, or tools when relevant
 - Ground questions in what you found in the codebase — do NOT ask questions whose answers are already obvious from the code
@@ -46,33 +46,47 @@ Guidelines:
 - Do NOT ask questions about the plan template itself — ask questions that help define what to build
 - Do NOT ask about implementation details unless the plan template explicitly calls for them
 
-Before the questions, add this hint:
-
-```
-> Answer with shorthand like `1a, 2b, 3e, 4a, 5b` or write freely.
-```
-
-After the questions, add:
-
-```
-Once you're done answering, I'll follow up with more questions. When you're ready, invoke the blueprint-generate skill to end the Q&A and generate the plan.
-```
-
 ### Step 5: Continue Q&A
 
 Wait for the user to respond. Accept answers in any format:
-- Shorthand: `1a, 2b, 3e` or `1a 2b 3e`
+- Shorthand: a bare letter like `b`
 - Prose: natural language answers
-- Mixed: `1a, 2b, 3. I think we should...`
+- Mixed: `b, but only for logged-in users`
 
 When they answer:
-- If they answered a question with a follow-up question of their own, answer it (or finish the discussion with them) before moving to the next round
+- If they answered with a follow-up question of their own, answer it (or finish the discussion with them) before moving on
 - Acknowledge briefly
 - Show the updated refined prompt — take the original feature description and add bullet points (using `*` syntax) incorporating all clarifications so far. Follow the rules in [references/refine-prompt.md](references/refine-prompt.md). Display it in a blockquote so the user can see how their answers are shaping the plan.
-- ALWAYS ask 3-5 more questions. These may be follow-ups to their answers or additional topics that still need to be discussed. Use the same question format as Step 4 (including the shorthand hint before the questions and the blueprint-generate reminder after).
-- Keep asking rounds of follow-up questions until the user invokes the blueprint-generate skill
+- Add a one-line detail check (see "Detail check" below)
+- Ask the NEXT single question, using the same format as Step 4. It may be a follow-up to their answer or a new topic that still needs discussion.
+- If they reply `skip`, move on to the next question without recording an answer
+- Keep asking one question at a time until the user ends Q&A
 
-IMPORTANT: Do NOT stop asking questions on your own. Only the user decides when Q&A is done by invoking blueprint-generate. Do NOT generate the plan. Do NOT write or modify any code files — you are only gathering information.
+**Ending Q&A.** The user can end Q&A at any moment, in either of two ways:
+- Replying `done` (or any clear equivalent: "generate", "stop", "that's enough")
+- Invoking the blueprint-generate skill themselves
+
+When the user signals they are done, invoke the blueprint-generate skill to generate the plan. If your harness cannot invoke skills programmatically, read and follow `../blueprint-generate/SKILL.md` directly.
+
+IMPORTANT: Do NOT end Q&A on your own — even when the detail check says coverage is complete, offer the next question and let the user decide. Do NOT generate the plan until the user signals done. Do NOT write or modify any code files — you are only gathering information.
+
+### Detail check
+
+After each answer (before asking the next question), append one line assessing whether enough detail has been captured to write a good plan. Measure against the sections of the selected template: which sections could already be written well from the answers so far, and which are still thin.
+
+Format:
+
+```
+**Detail check:** solid on overview and expected behavior; still thin on error handling and testing.
+```
+
+Once every template section has enough detail, say so explicitly:
+
+```
+**Detail check:** all template sections have enough detail — reply `done` to generate the plan, or keep going to refine further.
+```
+
+Keep it to one line. Do not list every section every time — name only what changed or what is still open.
 
 ### Progress indicator
 
